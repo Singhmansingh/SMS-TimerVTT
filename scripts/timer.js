@@ -9,6 +9,7 @@ export function updateTimer(id, expire, description, isStopwatch) {
   } else {
     msg.content = timerText(expire, description);
     if (expire <= 0) {
+      Hooks.callAll('timer.timerExpired',(id));
       timerExpiredNotification(description);
     }
   }
