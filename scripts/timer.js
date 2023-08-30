@@ -9,7 +9,7 @@ export function updateTimer(id, expire, description, isStopwatch) {
   } else {
     msg.content = timerText(expire, description);
     if (expire <= 0) {
-      Hooks.callAll('timer.timerExpired',(id));
+      Hooks.callAll('timer.timerExpired',description);
       timerExpiredNotification(description);
     }
   }
@@ -109,6 +109,7 @@ export async function createTimer(duration, description = "", tickSound = true, 
       if (endSound)
         AudioHelper.play({ src: "./modules/timer/audio/end.wav", volume: 0.7, autoplay: true, loop: false }, personal == false || personal == 'sound');
       timerExpiredNotification(msg.description);
+      Hooks.callAll('timer.timerExpired',description);
       if (timerExpireMessage.length) {
         let expireMessage = { content: timerExpireMessage };
         if (personal == true) {
@@ -140,7 +141,7 @@ function timerExpiredNotification(description) {
   if (description.length > 0)
     text += ' ';
   text += 'has expired!'
-  ui.notifications.info(text);
+  // ui.notifications.info(text);
 }
 
 function timerText(timer, description = "", id = '') {
